@@ -8,4 +8,5 @@ def normal(mean, std, size):
 
 
 def truncnormal(min, max, scale, size):
+    #https://www.zhihu.com/question/49923924 截断正态分布
     return asarray(truncnorm(a=min, b=max, scale=scale).rvs(size))

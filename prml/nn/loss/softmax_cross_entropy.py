@@ -1,5 +1,10 @@
 import numpy as np
-from scipy.misc import logsumexp
+
+#ImportError: cannot import name 'logsumexp' from 'scipy.misc'
+#https://github.com/cvxgrp/cvxpy/issues/640
+#from scipy.misc import logsumexp
+
+from scipy.special import logsumexp
 from prml.nn.function import Function
 
 

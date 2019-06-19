@@ -12,7 +12,8 @@ class Network(object):
     def setting_parameter(self):
         return getattr(self, "_setting_parameter", False)
 
-    @contextmanager
+    #contextmanager说明 http://www.bjhee.com/python-context.html
+    @contextmanager 
     def set_parameter(self):
         prev_scope = self._setting_parameter
         object.__setattr__(self, "_setting_parameter", True)
