@@ -7,6 +7,7 @@ from prml.nn.queue import backprop_queue
 class Function(object):
     enable_auto_broadcast = False
 
+    #构建计算图, 输出为out array, 持有操作符self, self持有输入args 和 kwargs,  
     def forward(self, *args, **kwargs):
         self.args = [self._convert2array(arg) for arg in args]
         if self.enable_auto_broadcast:
@@ -18,11 +19,15 @@ class Function(object):
         else:
             return Array(out, parent=None)
 
+    #把计算图的输出out反向压入队列，准备为后续更新梯度和权值, delta为op节点输出误差, sefl.args, kwargs为输入项
     def backward(self, delta):
+        #计算所有输入参数的变化量dargs，对应参数梯度
         dargs = self._backward(delta, *tuple(arg.value for arg in self.args), **self.kwargs)
         if isinstance(dargs, tuple):
             for arg, darg in zip(self.args, dargs):
                 arg._backward(darg)
+                #由于queue存放的是输出 array，由于一个输出可能有多个输入参数args，所以为防止array多次压入queue，
+                # 因此设置flag ‘is_in_queue’
                 if not arg.is_in_queue:
                     backprop_queue.enqueue(arg)
         else:

@@ -14,6 +14,7 @@ class Array(object):
         self.depth = 0 if parent is None else parent._out_depth()
         self.is_in_queue = False
 
+    #https://zhuanlan.zhihu.com/p/42730827
     def __repr__(self):
         return f"Array(shape={self.value.shape}, dtype={self.value.dtype})"
 
@@ -34,6 +35,7 @@ class Array(object):
         return self.value.dtype
 
     def backward(self, delta=None):
+        #delta为误差
         if delta is None:
             delta = np.ones_like(self.value).astype(config.dtype)
         assert(delta.shape == self.value.shape)
@@ -41,12 +43,12 @@ class Array(object):
         backprop_queue.enqueue(self)
         depth = self.depth
         while(len(backprop_queue)):
-            queue = backprop_queue.dequeue(depth)
-            if queue.parent is not None:
-                queue.parent.backward(queue.gradtmp)
-            queue.update_grad(queue.gradtmp)
-            queue.gradtmp = None
-            depth = queue.depth
+            array = backprop_queue.dequeue(depth)
+            if array.parent is not None:
+                array.parent.backward(array.gradtmp)
+            array.update_grad(array.gradtmp)
+            array.gradtmp = None
+            depth = array.depth
 
     def update_grad(self, grad):
         if self.grad is None:
@@ -58,6 +60,7 @@ class Array(object):
         self.grad = None
         self.gradtmp = None
 
+    #detla输入参数变化量，即梯度
     def _backward(self, delta):
         if delta is None:
             return

@@ -39,10 +39,15 @@ class RBF(Kernel):
         output : ndarray
             output of this radial basis function
         """
+
+        #The shape attribute for numpy arrays returns the dimensions of the array. 
+        # If Arr has m rows and m columns, then Arr.shape is (m,n). 
+        # So Arr.shape[0] is m and Arr.shape[1] is n. Also, Arr.shape[-1] is n, Arr.shape[-2] is m.
         assert x.shape[-1] == self.ndim
         assert y.shape[-1] == self.ndim
         if pairwise:
             x, y = self._pairwise(x, y)
+        #高斯径向基函数    
         d = self.params[1:] * (x - y) ** 2
         return self.params[0] * np.exp(-0.5 * np.sum(d, axis=-1))
 
@@ -50,9 +55,9 @@ class RBF(Kernel):
         if pairwise:
             x, y = self._pairwise(x, y)
         d = self.params[1:] * (x - y) ** 2
-        delta = np.exp(-0.5 * np.sum(d, axis=-1))
-        deltas = -0.5 * (x - y) ** 2 * (delta * self.params[0])[:, :, None]
-        return np.concatenate((np.expand_dims(delta, 0), deltas.T))
+        delta = np.exp(-0.5 * np.sum(d, axis=-1)) #对c0求导
+        deltas = -0.5 * (x - y) ** 2 * (delta * self.params[0])[:, :, None] #对c1求导
+        return np.concatenate((np.expand_dims(delta, 0), deltas.T)) #[c0,c1]
 
     def update_parameters(self, updates):
         self.params += updates
