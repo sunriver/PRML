@@ -36,7 +36,7 @@ def compute_auc(label_y, pred_y_prob):
     return auc
 
 
-def convert_prob_to_label(label_probs, prob_threshold:float, int positive_label, int negative_label):
+def convert_prob_to_label(label_probs, prob_threshold:float,  positive_label:int,  negative_label:int):
     labels = [ positive_label if prob > prob_threshold  else  negative_label for prob in label_probs ]
     return labels
 
