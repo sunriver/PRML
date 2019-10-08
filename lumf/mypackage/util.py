@@ -37,7 +37,7 @@ def compute_auc(label_y, pred_y_prob):
 
 
 def convert_prob_to_label(label_probs, prob_threshold:float,  positive_label:int,  negative_label:int):
-    labels = [ positive_label if prob > prob_threshold  else  negative_label for prob in label_probs ]
+    labels = [positive_label if prob > prob_threshold  else  negative_label for prob in label_probs ]
     return labels
 
 def onehot_postpad_docs(docs : pd.Series, vocab_size : int, doc_words_maxlen: int):
@@ -48,4 +48,3 @@ def onehot_postpad_docs(docs : pd.Series, vocab_size : int, doc_words_maxlen: in
     padded_docs = pad_sequences(onehot_docs, maxlen = doc_words_maxlen)
     print('onehot and padded shape : {} '.format(padded_docs.shape))
     return padded_docs
-    
